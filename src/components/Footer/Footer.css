@@ -1,0 +1,25 @@
+#footerh5{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 28px;
+    color: rgb(218, 168, 168);
+}
+
+.linksFooter{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 18px;
+    text-decoration: none;
+    color: black;
+}
+
+.linksFooter:hover{
+    font-size: 20px;
+    color: rgb(218, 168, 168);
+}
+.icon{
+    font-size: 25px;
+    color: black;
+}
+
+.icon:hover{
+    color: rgb(218, 168, 168);
+}
