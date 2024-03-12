@@ -52,3 +52,23 @@ export const getProducts = async () => {
         return { ok: false };
     }
 }
+
+export const createProduct = async (producto) => {
+    try {
+
+        const form = new FormData();
+        form.append('title', producto.title);
+        form.append('description', producto.description);
+        form.append('code', producto.code);
+        form.append('price', producto.price);
+        form.append('stock', producto.stock);
+        form.append('category', producto.category);
+        form.append('file', producto.file);
+
+        const { data } = await madeinheavenApi.post('/products', form);
+        return { ok: true, producto:data.producto };
+    } catch (error) {
+        console.log(error);
+        return { ok: false,  msg: error.response.data.errors[0].msg };
+    }
+}

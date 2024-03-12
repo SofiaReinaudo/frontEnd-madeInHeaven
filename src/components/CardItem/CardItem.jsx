@@ -2,7 +2,7 @@ import {Card, Typography,} from "@mui/material"
 import { NavLink } from "react-router-dom";
 import './CardItem.css'
 
-export const CardItem = ({ title, description, code, price, stock, thumbnail }) => {
+export const CardItem = ({ _id, title, description, code, price, stock, category, thumbnail }) => {
     return ( 
         <Card id="productoItem" className="card">
             <div className="card-body">

@@ -7,43 +7,51 @@ import { useEffect } from 'react';
 import { LoadingComponent } from '../components/LoadingComponent';
 import { MyCartPage } from '../pages/MyCartPage';
 import { MyCompras } from '../pages/MyCompras';
+import { AdminProductPage } from "../pages/AdminProductPage";
+import { AddProductPage } from "../pages/AddProductPage";
+import { ProductPage } from "../pages/ProductPage";
 
 
 export const AppRouter = () => {
-
-    const { status, startChekingLogin } = useAuthStore();
+    const { status, startCheckingLogin, isAdmin } = useAuthStore();
 
     useEffect(() => {
-        startChekingLogin();
+        startCheckingLogin();
     }, []);
 
-
-    if (status === 'checking') return <LoadingComponent />
+    if (status === "checking") return <LoadingComponent />;
 
 
     return (
         <Routes>
             {
-                status === 'not-authenticated'
+                status === "not-authenticated"
                     ?
                     (
                         <>
-                            <Route path='/auth/login' element={<LoginPage />} />
-                            <Route path='/auth/register' element={<RegisterPage />} />
+                            <Route path="/" element={<InicioPage />} />
+                            <Route path="/auth/login" element={<LoginPage />} />
+                            <Route path="/auth/register" element={<RegisterPage />} />
                         </>
                     )
                     :
                     (
                         <>
-                            <Route path='/mis-compras' element={<MyCompras />} />
-                            <Route path='/mi-carrito' element={<MyCartPage />} />
+                            <Route path="/mis-compras" element={<MyCompras />} />
+                            <Route path="/mi-carrito" element={<MyCartPage />} />
+                            {
+                                isAdmin && 
+                                <>
+                                    <Route path="/admin-product" element={<AdminProductPage />} />
+                                    <Route path="/admin-product/add" element={<AddProductPage />} />
+                                </>
+                            }
                         </>
                     )
             }
-
-            <Route path='/' element={<InicioPage />} />
-            <Route path='/*' element={<Navigate to='/' />} />
-
+            <Route path="/" element={<InicioPage />} />
+            <Route path="/product/*" element={<ProductPage />} />
+            <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
-    )
-}
+    );
+};

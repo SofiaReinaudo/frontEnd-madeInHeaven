@@ -18,51 +18,48 @@ export const useAuthStore = () => {
         isAdmin,
     } = useSelector(state => state.auth);
 
-    const startLogin = async (email, password) => {
-        const resp = await loginUser(email, password);
-        if (resp.ok) {
-            const { _id, cart_id, lastName, name, rol } = resp;
-            return dispatch(onLogin({ _id, cart_id, lastName, name, rol }));
+    const startLogin = async(email, password) => {
+        const resp = await loginUser(email,password);
+        if(resp.ok) {
+            const {_id, cart_id, lastName, name, rol} = resp;
+            return dispatch(onLogin({_id, cart_id, lastName, name, rol}))
         }
 
         return Swal.fire({
-            title: 'Ocurrió un error.',
+            title: 'Uhh ocurrio un error',
             html: resp.msg,
             icon: 'error',
         });
     }
 
-    const startRegister = async (email, password, name, lastName) => {
+    const startRegister = async(email, password, name, lastName) => {
         const resp = await registerUser(email, password, name, lastName);
-
-        if (resp.ok) {
-            const { _id, cart_id, lastName, name, rol } = resp;
-            return dispatch(onLogin({ _id, cart_id, lastName, name, rol }));
+        if(resp.ok) {
+            const {_id, cart_id, lastName, name, rol} = resp;
+            return dispatch(onLogin({_id, cart_id, lastName, name, rol}))
         }
 
         return Swal.fire({
-            title: 'Ocurrió un error.',
+            title: 'Uhh ocurrio un error',
             html: resp.msg,
             icon: 'error',
         });
     }
 
-    const startLogout = () => {
+    const startLogout = async() => {
         dispatch(onLogout());
         localStorage.clear();
     }
 
-    const startChekingLogin = async () => {
+    const startCheckingLogin = async() => {
         const resp = await validarToken();
 
-        if (resp.ok) {
-            const { _id, cart_id, lastName, name, rol } = resp;
-            return dispatch(onLogin({ _id, cart_id, lastName, name, rol }));
+        if(resp.ok) {
+            const {_id, cart_id, lastName, name, rol} = resp;
+            return dispatch(onLogin({_id, cart_id, lastName, name, rol}))
         }
-
         startLogout();
     }
-
 
     return {
         _id,
@@ -76,7 +73,7 @@ export const useAuthStore = () => {
 
         startLogin,
         startRegister,
-        startChekingLogin,
+        startCheckingLogin,
         startLogout,
     };
-}
+};
