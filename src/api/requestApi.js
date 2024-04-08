@@ -1,5 +1,6 @@
 import madeinheavenApi from "./config";
 
+// AUTH
 export const loginUser = async (email, password) => {
     try {
         const { data } = await madeinheavenApi.post('/auth/login', { email, password });
@@ -39,12 +40,34 @@ export const validarToken = async () => {
     }
 }
 
-export const getProducts = async () => {
+export const sendEmailResetPass = async (email) => {
     try {
-        const { data } = await madeinheavenApi.get('/products');
+        const { data } = await madeinheavenApi.post('/auth/cambiar-password', { email });
+        return { ok: true }
+    } catch (error) {
+        console.log(error);
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+export const resetPass = async (password, token) => {
+    try {
+        const { data } = await madeinheavenApi.post('/auth/reset-password', { password, token });
+        return { ok: true }
+    } catch (error) {
+        console.log(error);
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+// PRODUCTS
+export const getProducts = async (pageProducts = 1) => {
+    try {
+
+        const { data } = await madeinheavenApi.get(`/products?page=${pageProducts}`);
 
         const { result } = data;
-        const { payload: produtcs, totalDocs, totalPages, query, limit, page, hasNextPage, hasPrevPage, prevPage, nextPage } = result;
+        const { payload: produtcs, totalDocs, totalPages, limit, query, page, hasNextPage, hasPrevPage, prevPage, nextPage } = result;
 
         return { ok: true, produtcs, pagination: { totalDocs, totalPages, limit, query, page, hasNextPage, hasPrevPage, prevPage, nextPage } };
     } catch (error) {
@@ -53,22 +76,121 @@ export const getProducts = async () => {
     }
 }
 
-export const createProduct = async (producto) => {
+export const getProductbyId = async (id) => {
     try {
 
-        const form = new FormData();
-        form.append('title', producto.title);
-        form.append('description', producto.description);
-        form.append('code', producto.code);
-        form.append('price', producto.price);
-        form.append('stock', producto.stock);
-        form.append('category', producto.category);
-        form.append('file', producto.file);
+        const { data } = await madeinheavenApi.get(`/products/${id}`);
 
-        const { data } = await madeinheavenApi.post('/products', form);
-        return { ok: true, producto:data.producto };
+        const { producto } = data;
+
+        return { ok: true, product: producto };
     } catch (error) {
         console.log(error);
-        return { ok: false,  msg: error.response.data.errors[0].msg };
+        return { ok: false };
+    }
+}
+
+export const createProduct = async (producto) => {
+    try {
+        const { data } = await madeinheavenApi.post('/products', producto);
+        return { ok: true, producto: data.producto };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+export const deleteProduct = async (idProduct) => {
+    try {
+        const { data } = await madeinheavenApi.delete(`/products/${idProduct}`);
+        return { ok: true, msg: data.msg };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+export const updateProduct = async (id, values) => {
+    try {
+        const { data } = await madeinheavenApi.put(`/products/${id}`, values);
+        return { ok: true, producto: data.producto };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+// CARTS
+export const getCartById = async (id) => {
+    try {
+        const { data } = await madeinheavenApi.get(`/carts/${id}`);
+        const { carrito } = data;
+        return { ok: true, cart: carrito };
+    } catch (error) {
+        console.log(error);
+        return { ok: false };
+    }
+}
+
+export const addProductInCart = async (idCart, idProduct) => {
+    try {
+        const { data } = await madeinheavenApi.post(`/carts/${idCart}/product/${idProduct}`);
+        return { ok: true, cart: data.carrito };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+export const removeProductInCart = async (idCart, idProduct, quantity) => {
+    try {
+        const { data } = await madeinheavenApi.put(`/carts/${idCart}/products/${idProduct}`, { quantity });
+        return { ok: true, cart: data.carrito };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+export const deleteProductInCart = async (idCart, idProduct) => {
+    try {
+        const { data } = await madeinheavenApi.delete(`/carts/${idCart}/products/${idProduct}`);
+        return { ok: true, cart: data.carrito };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+export const confirmarCompra = async (idCart) => {
+    try {
+        const { data } = await madeinheavenApi.post(`/carts/${idCart}/purchase`);
+        return { ok: true };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
+    }
+}
+
+// TICKETS
+export const getTickets = async () => {
+    try {
+        const { data } = await madeinheavenApi.get('/tickets');
+        return { ok: true, tickets: data.tickets };
+    } catch (error) {
+        console.log(error);
+        return { ok: false };
+    }
+}
+
+// Mercado Pago
+export const referenceId = async (idCart) => {
+    try {
+        const { data } = await madeinheavenApi.post(`/carts/create-preference/${idCart}`);
+        console.log({ data });
+        return { ok: true, idPreference: data.idPreference };
+    } catch (error) {
+        console.log({ error });
+        return { ok: false, msg: error.response.data.msg };
     }
 }

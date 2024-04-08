@@ -1,8 +1,9 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
-import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../hooks/useAuthStore';
+import Swal from 'sweetalert2';
 
 export const LoginPage = () => {
 
@@ -29,8 +30,12 @@ export const LoginPage = () => {
     startLogin(email, password);
   }
 
-
-
+  const handelResetPass = () => {
+    Swal.fire({
+      title: 'Se te envio un email al correo para reestablecer la contraseña',
+      icon: 'success',
+    });
+  }
 
   return (
     <Grid
@@ -39,12 +44,12 @@ export const LoginPage = () => {
       direction='column'
       alignItems='center'
       justifyContent='center'
-      sx={{ minHeight: '100vh', backgroundColor: 'rgb(213, 209, 209)' }}
+      sx={{ minHeight: '100vh', backgroundColor: 'gray' }}
     >
 
       <Grid item sx={{ width: 450, backgroundColor: 'white', borderRadius: 2, padding: 3 }}>
 
-        <Typography variant='h5' style={{ color:'rgb(225, 176, 176)'}}>Login</Typography>
+        <Typography variant='h5'>Login</Typography>
 
         <Grid container>
 
@@ -83,12 +88,15 @@ export const LoginPage = () => {
               disabled={disabled}
               variant="contained"
               onClick={onSubmitForm}
-              style={{backgroundColor:'pink', color:'black'}}
               fullWidth>Iniciar Sesión</Button>
           </Grid>
 
           <Grid container direction='row' justifyContent='end' mt={2}>
-            <Link to='/auth/register' style={{ textDecoration:'none', color:'rgb(225, 176, 176)'}}>¿No tienes cuenta? Registrarse</Link>
+            <Link to='/auth/register'>¿No tienes cuenta? Registrarse</Link>
+          </Grid>
+
+          <Grid container direction='row' justifyContent='end' mt={2}>
+            <Link to='/auth/email'>¿Reestablecer contraseña?</Link>
           </Grid>
 
 

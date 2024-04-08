@@ -2,11 +2,22 @@ import { Grid } from '@mui/material';
 import { useProductStore } from '../../hooks/useProductStore';
 import { CardItem } from '../CardItem/CardItem';
 import './CardProducts.css';
+import { useEffect, useState } from 'react';
 
 
 export const CardProducts = () => {
 
-    const { products } = useProductStore();
+    const [currentPage, setCurrentPage] = useState(1);
+    const { products, pagination, startGetProducts } = useProductStore();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        startGetProducts(currentPage).then(() => setLoading(false));
+    }, [currentPage]);
+
+    const goToPage = (page) => {
+        setCurrentPage(page);
+    };
 
     return (
         <div className="container" id='containerItems'>

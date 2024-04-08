@@ -1,13 +1,15 @@
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Badge, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import LocalGroceryStoreOutlinedIcon from '@mui/icons-material/LocalGroceryStoreOutlined';
 import { useAuthStore } from '../../hooks/useAuthStore';
+import { useCartStore } from '../../hooks/useCartStore';
 import './NavBar.css'
 
 export const NavBar = () => {
 
     const { name, status, isAdmin, startLogout } = useAuthStore();
-
+    const { cart } = useCartStore();
+    
     const onLogout = () => startLogout();
 
     return (
@@ -18,11 +20,19 @@ export const NavBar = () => {
                 <div>{isAdmin && <NavLink className='navbar-brand' style={{ marginLeft:'60px'}}>Agregar Producto</NavLink>}</div>
             </div>
 
+            <NavLink
+                    to={`${status === 'not-authenticated' ? '/auth/login' : '/mi-carrito'}`}
+                    className='navbar-brand'
+                    style={{ marginRight: '15px' }}>
+                </NavLink>
+
+
             <div style={{ marginRight: '50px' }}>
 
                 <NavLink to={`${status === 'not-authenticated' ? '/auth/login' : '/mi-carrito'}`} className='navbar-brand' style={{  }}><LocalGroceryStoreOutlinedIcon /></NavLink>
 
                 <NavLink to={`${status === 'not-authenticated' ? '/auth/login' : '/mis-compras'}`} className='navbar-brand' style={{ }}>Mis compras</NavLink>
+                <NavLink to={`${status === 'not-authenticated' ? '/auth/login' : '/chat'}`} className='navbar-brand' style={{ }}>Chat</NavLink>
 
                 {
                     status === 'authenticated'

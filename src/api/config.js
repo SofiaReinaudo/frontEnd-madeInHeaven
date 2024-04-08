@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { getVariablesEnv } from '../helpers/getVariablesEnv';
 
-const madeinheavenApi = axios.create({
-    baseURL: 'https://madeinheaven.onrender.com/api'
-});
+const { VITE_URL_API } = getVariablesEnv();
+
+const madeinheavenApi = axios.create({ baseURL: VITE_URL_API });
 
 madeinheavenApi.interceptors.request.use(config => {
     config.headers = {

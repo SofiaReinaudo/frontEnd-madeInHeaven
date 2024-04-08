@@ -2,9 +2,18 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useProductStore } from "../hooks/useProductStore";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { LoadingComponent } from '../components/LoadingComponent';
 import { NavBar } from "../components/NavBar/NavBar.jsx"
+import Swal from 'sweetalert2';
 
 export const AddProductPage = () => {
+
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
+
     const initialValues = {
         title: '',
         description: '',
@@ -31,21 +40,42 @@ export const AddProductPage = () => {
 
     const disabled = (title != '' && description != '' && code != '' && price != '' && stock != '' && category != '' && file != '') ? false : true;
 
-    const onSubmitForm = () => {
-        const isEmpty = Object.keys(errors).lenght === 0;
-        if (isEmpty) return;
+    const onSubmitForm = async () => {
+        try {
+            setLoading(true);
+            const isEmpty = Object.keys(errors).length === 0;
+            if (!isEmpty) return;
 
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('description', description);
-        formData.append('code', code);
-        formData.append('price', price);
-        formData.append('stock', stock);
-        formData.append('category', category);
-        formData.append('file', file);
-        
-        //startCreateProduct({title, description, code, price, stock, category, file})
-        startCreateProduct(formData);
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('code', code);
+            formData.append('price', price);
+            formData.append('stock', stock);
+            formData.append('category', category);
+            formData.append('file', file);
+
+            const success = await startCreateProduct(formData);
+
+            console.log({ success });
+
+            if (success) {
+                setLoading(false);
+                setShowMessage(true);
+                Swal.fire({
+                    title: 'Producto agregado con exito',
+                    icon: 'success',
+                });
+                navigate('/admin-product');
+            } else {
+                setLoading(false);
+                setShowMessage(false);
+            }
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+            setShowMessage(false);
+        }
     }
 
     const onFileChange = ({target}) =>{
@@ -56,6 +86,9 @@ export const AddProductPage = () => {
         })
     }
 
+    if (loading)
+        return <LoadingComponent />
+
     return (
         <>
             <NavBar />
@@ -65,7 +98,6 @@ export const AddProductPage = () => {
                 spacing={0}
                 direction="column"
                 alignItems="center"
-                //justifyContent='center'
 
                 sx={{ minHeight: "100vh", backgroundColor: "lightblue" }}
             >
