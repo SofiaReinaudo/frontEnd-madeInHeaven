@@ -18,7 +18,8 @@ export const Footer = () => {
                 <NavLink to='/auth/login' className="nav-item mb-2 linksFooter">Iniciar Sesión</NavLink>
                 <NavLink to='/auth/register' className="nav-item mb-2 linksFooter">Registrarse</NavLink>
                 <NavLink className="nav-item mb-2 linksFooter" to={`${status === 'not-authenticated' ? '/auth/login' : '/mis-compras'}`}>Mis compras</NavLink>
-                <NavLink to='/' className="nav-item mb-2 linksFooter">Carrito</NavLink>
+                <NavLink to='/mi-carrito' className="nav-item mb-2 linksFooter">Carrito</NavLink>
+                <NavLink to='/chat' className="nav-item mb-2 linksFooter">Chat</NavLink>
                 <NavLink to='/' className="nav-item mb-2 linksFooter" onClick={onLogout}>Cerrar sesión</NavLink>
             </div>
             </div>

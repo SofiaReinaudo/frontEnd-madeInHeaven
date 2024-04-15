@@ -1,17 +1,17 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { CardItemCart } from "../components/CardItemCart";
 import { NavBar } from "../components/NavBar/NavBar.jsx";
 import { useCartStore } from "../hooks/useCartStore";
 import { Button, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { initMercadoPago, Wallet} from '@mercadopago/sdk-react'
+import Swal from "sweetalert2";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react"
 import { referenceId } from "../api/requestApi";
 import { getVariablesEnv } from "../helpers/getVariablesEnv";
-import queryString from 'query-string';
+import queryString from "query-string";
 
 const { VITE_YOUR_PUBLIC_KEY_MERCADO_PAGO } = getVariablesEnv();
-
-initMercadoPago(VITE_YOUR_PUBLIC_KEY_MERCADO_PAGO, { locale: 'es-AR' });
+initMercadoPago(VITE_YOUR_PUBLIC_KEY_MERCADO_PAGO, { locale: "es-AR" });
 
 export const MyCartPage = () => {
 
@@ -20,14 +20,19 @@ export const MyCartPage = () => {
     const [preferenceId, setPreferenceId] = useState(null);
     const { status } = queryString.parse(location.search);
     const navigate = useNavigate();
-
+    
     const confirmarCompra = async () => {
-        console.log('confirmar compra');
+        console.log("confirmar compra");
         setConfirmCompra(true);
         await startConfirmarCompra();
         setConfirmCompra(false);
-        navigate('/mis-compras')
-    }
+        navigate("/mis-compras");
+        Swal.fire({
+            title: "Compra Realizada con Exito",
+            html: "Gracias por su compra",
+            icon: "success",
+        });
+    };
 
     const idReference = async () => {
         try {
@@ -46,8 +51,7 @@ export const MyCartPage = () => {
                 <Typography variant="h4">Cargando carrito...</Typography>
             </>
         );
-    }
-
+    };
 
     const total = cart?.products?.reduce((accumulator, product) => {
         return accumulator + (product.quantity * product.id.price);
@@ -61,7 +65,7 @@ export const MyCartPage = () => {
                 <Typography variant="h4">Procesando compra...</Typography>
             </>
         );
-    }
+    };
 
     return (
         <>
@@ -74,7 +78,7 @@ export const MyCartPage = () => {
                     </div>
                 ))
             }
-
+            
             {
                 cart.products.length > 0 &&
                 <>
@@ -88,7 +92,7 @@ export const MyCartPage = () => {
                     </div>
                     <div className="d-flex justify-content-center mt-3">
                         {
-                            preferenceId && <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
+                            preferenceId && <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: "smart_option" } }} />
                         }
                     </div>
                 </>
@@ -97,12 +101,12 @@ export const MyCartPage = () => {
             {
                 cart.products.length === 0 &&
                 <>
-                    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                    <div style={{ textAlign: "center", marginTop: "50px" }}>
                         <Typography variant="h4">Tu carrito está vacío</Typography>
-                        <Typography variant="body1" style={{ marginTop: '20px', marginBottom: '20px' }}>¡Agrega algunos productos para comenzar!</Typography>
-                        <Link to="/" style={{ textDecoration: 'none' }}>
-                            <Button variant="contained" color="primary" style={{ marginTop: '20px' }}>
-                                <Typography variant="button" sx={{ color: 'white' }}>
+                        <Typography variant="body1" style={{ marginTop: "20px", marginBottom: "20px" }}>¡Agrega algunos productos para comenzar!</Typography>
+                        <Link to="/" style={{ textDecoration: "none" }}>
+                            <Button variant="contained" color="primary" style={{ marginTop: "20px" }}>
+                                <Typography variant="button" sx={{ color: "white" }}>
                                     Ir a comprar
                                 </Typography>
                             </Button>
@@ -112,7 +116,7 @@ export const MyCartPage = () => {
             }
 
             {
-                (cart && status == 'approved') && confirmarCompra()
+                (cart && status == "approved") && confirmarCompra()
             }
         </>
     );

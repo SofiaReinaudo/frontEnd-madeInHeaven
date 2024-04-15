@@ -11,7 +11,7 @@ export const CardItem = ({ _id, title, description, code, price, stock, category
             <Typography color="text.secondary">{description}</Typography>
             <Typography>Stock: {stock}</Typography>
             <Typography>Precio: ${price}</Typography>
-            <NavLink to='' className="btn btn-dark" id="btnComprar" >Agregar al carrito</NavLink>
+            <NavLink to={`/product/${_id}`} className="btn btn-dark" id="btnComprar" >Agregar al carrito</NavLink>
             </div>
         </Card>
     )

@@ -66,6 +66,7 @@ export const getProducts = async (pageProducts = 1) => {
 
         const { data } = await madeinheavenApi.get(`/products?page=${pageProducts}`);
 
+        console.log({data})
         const { result } = data;
         const { payload: produtcs, totalDocs, totalPages, limit, query, page, hasNextPage, hasPrevPage, prevPage, nextPage } = result;
 
@@ -122,8 +123,10 @@ export const updateProduct = async (id, values) => {
 
 // CARTS
 export const getCartById = async (id) => {
+    console.log({id})
     try {
         const { data } = await madeinheavenApi.get(`/carts/${id}`);
+        console.log({data})
         const { carrito } = data;
         return { ok: true, cart: carrito };
     } catch (error) {
